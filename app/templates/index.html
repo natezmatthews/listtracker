@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>Track changes to your lists</title>
+    </head>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.risuto }}
+    </form>
+    <body>
+        {% for ulist in ulists %}
+            <div><p>{{ ulist }} </p></div>
+        {% endfor %}
+    </body>
+</html>
