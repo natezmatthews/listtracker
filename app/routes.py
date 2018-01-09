@@ -7,5 +7,5 @@ from app.Classes import SelectForm, Risuto
 def index():
     ulists = ['X','Y','Z']
     form = SelectForm()
-    form.risuto.choices = [(u,u) for u in ulists]
+    form.risuto.choices = [(u,u) for u in ulists] # Choices must be set after initiation of form
     return render_template('index.html',ulists=ulists,form=form)

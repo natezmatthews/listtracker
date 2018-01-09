@@ -92,5 +92,4 @@ class Risuto():
 
 
 class SelectForm(FlaskForm):
-    risuto = SelectField('List to compare') # This will break if the set name is not unique
-    # risuto = SelectField('List to compare',choices=[(r.name,r.name) for r in risutos]) # This will break if the set name is not unique
+    risuto = SelectField('List to compare')
