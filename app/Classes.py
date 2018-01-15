@@ -1,12 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField
+from wtforms import SelectField, FieldList
 
 class Risuto():
     def __init__(self):
         self._risutotext = None
         self._name = None
         self._description = None
-        self._separators = [",","\n","sep"] # Default separators
+        self._separators = [",","\n"] # Default separators
         self._risutoset = set()
     
     def _strvalidation(self,value,maxlen=None):
@@ -91,5 +91,7 @@ class Risuto():
         del self._description
 
 
-class SelectForm(FlaskForm):
-    risuto = SelectField('List to compare')
+class ComparisonForm(FlaskForm):
+    risuto1 = SelectField('List to compare')
+    risuto2 = SelectField('List to compare')
+    # risuto = FieldList(SelectField('List to compare'),min_entries=2,max_entries=2)
