@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, FieldList, SubmitField
+from wtforms import SelectField, FieldList, SubmitField,  StringField
 
 class Risuto():
     def __init__(self):
@@ -92,10 +92,13 @@ class Risuto():
 
 
 class ComparisonForm(FlaskForm):
-    # risuto = FieldList(SelectField('List to compare'),min_entries=2,max_entries=2)
     risuto1 = SelectField('Left List')
     risuto2 = SelectField('Right List')
     left = SubmitField('Left')
     union = SubmitField('Union')
     inters = SubmitField('Intersection')
     right = SubmitField('Right')
+
+class RisutoForm(FlaskForm):
+    risuto = StringField('Input')
+    submit = SubmitField('Submit')

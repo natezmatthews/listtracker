@@ -1,6 +1,6 @@
 from flask import render_template
 from app import app
-from app.Classes import ComparisonForm, Risuto
+from app.Classes import ComparisonForm, RisutoForm, Risuto
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -17,3 +17,14 @@ def index():
         print('inValid')
         print(form.left.data)
     return render_template('index.html',ulists=lists1,form=form)
+
+@app.route('/create',methods=['GET','POST'])
+def create():
+    form = RisutoForm()
+    if form.validate_on_submit():
+        print('Valid')
+        print(form.risuto.data)
+    else:
+        print('inValid')
+        print(form.risuto.data)
+    return render_template('create.html',form=form)
