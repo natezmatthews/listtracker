@@ -4,7 +4,13 @@
     </head>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        {{ form.risuto }}
+        {{ form.risuto1 }}
+        {{ form.risuto2 }}
+        <br>
+        {{ form.left() }}
+        {{ form.union() }}
+        {{ form.inters() }}
+        {{ form.right() }}
     </form>
     <body>
         {% for ulist in ulists %}
