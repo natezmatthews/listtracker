@@ -4,8 +4,8 @@
     </head>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        {{ form.risuto1 }}
-        {{ form.risuto2 }}
+        {{ form.risuto1() }}
+        {{ form.risuto2() }}
         <br>
         {{ form.left() }}
         {{ form.union() }}
@@ -13,6 +13,9 @@
         {{ form.right() }}
     </form>
     <body>
+        {% if output %}
+            {{ output }}
+        {% endif %}
         {% if risutos %}
             {% for risuto in risutos %}
                 <div><h1>{{ risuto.name }} </h1>

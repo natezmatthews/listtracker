@@ -4,6 +4,7 @@ from wtforms import SelectField, FieldList, SubmitField,  StringField
 class Risuto():
     def __init__(self):
         self._risutotext = None
+        self._hashid = None
         self._name = None
         self._description = None
         self._separators = [",","\n"] # Default separators
@@ -24,7 +25,7 @@ class Risuto():
     def risutotext(self,value):
         self._strvalidation(value,field='text')
         self._risutotext = value
-        self._risutoset_setter()
+        self._risutoset_setter(value)
         
     @risutotext.deleter
     def risutotext(self,value):
@@ -45,8 +46,8 @@ class Risuto():
     def risutoset(self):
         return self._risutoset
     
-    def _risutoset_setter(self):
-        newrisuto = [self._risutotext]
+    def _risutoset_setter(self,value):
+        newrisuto = [value]
         for sep in self._separators:
             oldrisuto = newrisuto
             newrisuto = []
