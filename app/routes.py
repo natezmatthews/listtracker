@@ -5,7 +5,6 @@ from app.Classes import ComparisonForm, RisutoForm, Risuto
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    print(session)
     form = ComparisonForm()
     # Choices must be set after initiation of form
     if 'risutos' in session:
@@ -19,14 +18,12 @@ def index():
     
     if form.validate_on_submit():
         pass
-    return render_template('index.html',form=form)
+    return render_template('index.html',risutos=risutos,form=form)
 
 @app.route('/create',methods=['GET','POST'])
 def create():
     form = RisutoForm()
-    print(session)
     if form.validate_on_submit():
-        print(form.risuto.data)
         risuto = Risuto()
         risuto.name = 'Name: ' + form.risuto.data[:5]
         risuto.description = 'Desc: ' + form.risuto.data[:5]
@@ -34,6 +31,7 @@ def create():
 
         risutodict = risuto.todict()
         if 'risutos' in session:
+            # Appending directly didn't work; something about session?
             risutos = session['risutos']
             risutos.append(risutodict)
             session['risutos'] = risutos

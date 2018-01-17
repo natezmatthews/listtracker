@@ -13,9 +13,13 @@
         {{ form.right() }}
     </form>
     <body>
-        <!-- {{ text }} -->
-        <!-- {% for risutos in risutoss %}
-            <div><p>{{ risutos }} </p></div>
-        {% endfor %} -->
+        {% if risutos %}
+            {% for risuto in risutos %}
+                <div><h1>{{ risuto.name }} </h1>
+                    {{ risuto.text }}<br>
+                    <i>Description:</i>{{ risuto.description }}<br>
+                </div>
+            {% endfor %}
+        {% endif %}
     </body>
 </html>
