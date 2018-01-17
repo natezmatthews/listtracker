@@ -9,11 +9,12 @@ class Risuto():
         self._separators = [",","\n"] # Default separators
         self._risutoset = set()
     
-    def _strvalidation(self,value,maxlen=None):
-        assert isinstance(value, str), "This field must be a string."
-        assert value, "This field may not be an empty string."
+    def _strvalidation(self,value,field,maxlen=None):
+        assert isinstance(value, str), "The {} must be a string.".format(field)
+        assert value, "The {} may not be an empty string.".format(field)
         if maxlen:
-            assert maxlen >= len(value), "This string must be {} or fewer characters.".format(maxlen)
+            assert maxlen >= len(value), \
+                   "The {} must be {} or fewer characters.".format(field,maxlen)
     
     @property
     def risutotext(self):
@@ -21,7 +22,7 @@ class Risuto():
     
     @risutotext.setter
     def risutotext(self,value):
-        self._strvalidation(value)
+        self._strvalidation(value,field='text')
         self._risutotext = value
         self._risutoset_setter()
         
@@ -31,7 +32,7 @@ class Risuto():
         del self._risutoset
 
     def addseparator(self,sep):
-        self._strvalidation(sep)
+        self._strvalidation(sep,field='separator')
         self._separators.append(sep)
 
     def removeseparator(self,sep):
@@ -52,12 +53,14 @@ class Risuto():
             for elem in oldrisuto:
                 newrisuto.extend(elem.split(sep))
         
-        # The filter gets rid of the empty strings split creates when there are two or more delimiters in a row
+        # The filter gets rid of the empty strings split creates 
+        # when there are two or more delimiters in a row
         self._risutoset = set(filter(None,newrisuto))
     
     @risutoset.setter
     def risutoset(self,value):
-        raise AttributeError('The item set must be initiated by creating an item list.')
+        raise AttributeError('The item set must' +\
+                                'be initiated by creating an item list.')
     
     @risutoset.deleter
     def risutoset(self):
@@ -70,7 +73,7 @@ class Risuto():
     
     @name.setter
     def name(self,value):
-        self._strvalidation(value,80) # DEFAULT LENGTH FOR NOW
+        self._strvalidation(value,field='name',maxlen=80) # TODO: MAXLEN
         self._name = value
         
     @name.deleter
@@ -83,13 +86,27 @@ class Risuto():
     
     @description.setter
     def description(self,value):
-        self._strvalidation(value,280) # DEFAULT LENGTH FOR NOW
+        self._strvalidation(value,field='description',maxlen=280) # TODO: MAXLEN
         self._description = value
         
     @description.deleter
     def description(self,value):
         del self._description
 
+    @classmethod
+    def fromdict(cls,d):
+        instance = cls()
+        for field in ['text','name','description']:
+            if field in d:
+                setattr(instance,field,d[field])
+        return instance
+
+    def todict(self):
+        d = {'text':self._risutotext,
+             'name':self._name,
+             'description':self._description
+            }
+        return d
 
 class ComparisonForm(FlaskForm):
     risuto1 = SelectField('Left List')
