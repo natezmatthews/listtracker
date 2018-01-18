@@ -53,7 +53,7 @@ def create():
         risuto = Risuto()
         risuto.name = 'Name: ' + form.risuto.data[:5]
         risuto.description = 'Desc: ' + form.risuto.data[:5]
-        risuto.risutotext = form.risuto.data
+        risuto.text = form.risuto.data
 
         risutodict = risuto.todict()
         if 'risutos' in session:

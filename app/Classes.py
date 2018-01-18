@@ -3,7 +3,7 @@ from wtforms import SelectField, FieldList, SubmitField,  StringField
 
 class Risuto():
     def __init__(self):
-        self._risutotext = None
+        self._text = None
         self._hashid = None
         self._name = None
         self._description = None
@@ -18,18 +18,18 @@ class Risuto():
                    "The {} must be {} or fewer characters.".format(field,maxlen)
     
     @property
-    def risutotext(self):
-        return self._risutotext
+    def text(self):
+        return self._text
     
-    @risutotext.setter
-    def risutotext(self,value):
+    @text.setter
+    def text(self,value):
         self._strvalidation(value,field='text')
-        self._risutotext = value
+        self._text = value
         self._risutoset_setter(value)
         
-    @risutotext.deleter
-    def risutotext(self,value):
-        del self._risutotext
+    @text.deleter
+    def text(self,value):
+        del self._text
         del self._risutoset
 
     def addseparator(self,sep):
@@ -66,7 +66,7 @@ class Risuto():
     @risutoset.deleter
     def risutoset(self):
         del self._risutoset
-        del self._risutotext
+        del self._text
     
     @property
     def name(self):
@@ -97,13 +97,13 @@ class Risuto():
     @classmethod
     def fromdict(cls,d):
         instance = cls()
-        for field in ['text','name','description']:
-            if field in d:
-                setattr(instance,field,d[field])
+        instance.text = d['text']
+        instance.name = d['name']
+        instance.description = d['description']
         return instance
 
     def todict(self):
-        d = {'text':self._risutotext,
+        d = {'text':self._text,
              'name':self._name,
              'description':self._description
             }
