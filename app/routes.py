@@ -51,9 +51,9 @@ def create():
     form = RisutoForm()
     if form.validate_on_submit():
         risuto = Risuto()
-        risuto.name = 'Name: ' + form.risuto.data[:5]
-        risuto.description = 'Desc: ' + form.risuto.data[:5]
-        risuto.text = form.risuto.data
+        risuto.name = form.name.data
+        risuto.text = form.text.data
+        risuto.description = form.description.data
 
         risutodict = risuto.todict()
         if 'risutos' in session:

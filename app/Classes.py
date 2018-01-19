@@ -1,5 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, FieldList, SubmitField,  StringField
+from wtforms import SelectField, \
+                    FieldList, \
+                    SubmitField, \
+                    TextAreaField, \
+                    StringField
 
 class Risuto():
     def __init__(self):
@@ -7,7 +11,7 @@ class Risuto():
         self._hashid = None
         self._name = None
         self._description = None
-        self._separators = [",","\n"] # Default separators
+        self._separators = []
         self._risutoset = set()
     
     def _strvalidation(self,value,field,maxlen=None):
@@ -118,5 +122,7 @@ class ComparisonForm(FlaskForm):
     right = SubmitField('Right')
 
 class RisutoForm(FlaskForm):
-    risuto = StringField('Input')
+    name = StringField('Name')
+    text = TextAreaField('List')
+    description = TextAreaField('Description')
     submit = SubmitField('Submit')

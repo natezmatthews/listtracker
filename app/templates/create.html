@@ -4,8 +4,11 @@
     </head>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        {{ form.risuto() }}
-        <br>
+        {{ form.name.label }} {{form.name}} <br>
+        {{ form.text.label }} <br> 
+        {{ form.text(cols="35", rows="20") }} <br>
+        {{ form.description.label }} <br> 
+        {{ form.description(cols="35", rows="4") }} <br>
         {{ form.submit() }}
     </form>
 </html>
