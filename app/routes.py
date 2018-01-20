@@ -2,7 +2,12 @@ from flask import render_template, session, redirect, url_for
 from app import app
 from app.Classes import ComparisonForm, RisutoForm, Risuto
 
-#session.clear()
+@app.route('/clear')
+def clear():
+    print(session)
+    session.clear()
+    print(session)      
+    return 'Done'
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -30,9 +35,15 @@ def index():
         output = ','.join(list(setop))
     else:
         output = None
-    return render_template('index.html',risutos=risutos,
-                                        output=output,
-                                        form=form)
+
+    if 'risutos' in locals():
+        return render_template('index.html',risutos=risutos,
+                                            output=output,
+                                            form=form)
+    else:
+        return render_template('index.html',output=output,
+                                            form=form)
+
 
 def setoperation(risuto1,risuto2,left,union,inters,right):
     a = risuto1.risutoset
@@ -51,10 +62,23 @@ def create():
     form = RisutoForm()
     if form.validate_on_submit():
         risuto = Risuto()
+        
+        # Text fields
         risuto.name = form.name.data
         risuto.text = form.text.data
         risuto.description = form.description.data
+        
+        # Separators
+        if form.comma.data:
+            risuto.addseparator(',')
+        else:
+            risuto.removeseparator(',')
+        if form.newline.data:
+            risuto.addseparator('\n')
+        else:
+            risuto.removeseparator('\n')
 
+        # Store it in session
         risutodict = risuto.todict()
         if 'risutos' in session:
             # Appending directly didn't work; something about session?

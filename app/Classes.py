@@ -3,7 +3,24 @@ from wtforms import SelectField, \
                     FieldList, \
                     SubmitField, \
                     TextAreaField, \
-                    StringField
+                    StringField, \
+                    BooleanField
+
+def showme(x,indent=''):
+    try:
+        print('{}Type: {}'.format(indent,str(type(x))))
+    except:
+        print('{}Type unknown'.format(indent))
+    try:
+        if isinstance(x,str):
+            raise TypeError # Skip to the except
+        for y in x:
+            showme(y,indent + ' ')
+    except: # Not iterable
+        try:
+            print('{}Thing: {}'.format(indent,str(x)))
+        except:
+            print('{}Thing unknown'.format(indent))
 
 class Risuto():
     def __init__(self):
@@ -51,12 +68,16 @@ class Risuto():
         return self._risutoset
     
     def _risutoset_setter(self,value):
+        # showme(value)
         newrisuto = [value]
+        # showme(newrisuto)
         for sep in self._separators:
+            # showme(sep)
             oldrisuto = newrisuto
             newrisuto = []
             for elem in oldrisuto:
                 newrisuto.extend(elem.split(sep))
+            # showme(newrisuto)
         
         # The filter gets rid of the empty strings split creates 
         # when there are two or more delimiters in a row
@@ -101,15 +122,17 @@ class Risuto():
     @classmethod
     def fromdict(cls,d):
         instance = cls()
-        instance.text = d['text']
         instance.name = d['name']
         instance.description = d['description']
+        instance._separators = d['separators']
+        instance.text = d['text']
         return instance
 
     def todict(self):
         d = {'text':self._text,
              'name':self._name,
-             'description':self._description
+             'description':self._description,
+             'separators':self._separators
             }
         return d
 
@@ -125,4 +148,6 @@ class RisutoForm(FlaskForm):
     name = StringField('Name')
     text = TextAreaField('List')
     description = TextAreaField('Description')
+    comma = BooleanField('Comma')
+    newline = BooleanField('New Line',default='true')
     submit = SubmitField('Submit')
