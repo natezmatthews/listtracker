@@ -1,6 +1,7 @@
 from flask import render_template, session, redirect, url_for
 from app import app
 from app.Classes import ComparisonForm, RisutoForm, Risuto
+from datetime import datetime as dt
 
 @app.route('/clear')
 def clear():
@@ -15,7 +16,7 @@ def index():
     form = ComparisonForm()
     # Choices must be set after initiation of form
     if 'risutos' in session:
-        risutos = [Risuto.fromdict(r) for r in session['risutos']]
+        risutos = [Risuto.fromjson(r) for r in session['risutos']]
         lookup = {r.name: r for r in risutos}
         choices = [(r.name,r.name) for r in risutos]
     else:
@@ -23,7 +24,7 @@ def index():
         choices = [(None,'Nothing yet')]
 
     form.risuto1.choices = choices
-    form.risuto2.choices = choices
+    form.risuto2.choices = choices[1:] + [choices[0]]
     
     if form.left.data or form.union.data or form.inters.data or form.right.data:
         setop = setoperation(lookup[form.risuto1.data],
@@ -75,18 +76,23 @@ def create():
             risuto.removeseparator(',')
         if form.newline.data:
             risuto.addseparator('\n')
+            risuto.addseparator('\r')
         else:
             risuto.removeseparator('\n')
+            risuto.removeseparator('\r')
+
+        # Datetime
+        risuto.created = dt.now()
 
         # Store it in session
-        risutodict = risuto.todict()
+        risutojson = risuto.tojson()
         if 'risutos' in session:
             # Appending directly didn't work; something about session?
             risutos = session['risutos']
-            risutos.append(risutodict)
+            risutos.append(risutojson)
             session['risutos'] = risutos
         else:
-            session['risutos'] = [risutodict]
+            session['risutos'] = [risutojson]
         
         return redirect(url_for('index'))
     

@@ -1,4 +1,6 @@
 from flask_wtf import FlaskForm
+from datetime import datetime as dt
+from dateutil.parser import parse
 from wtforms import SelectField, \
                     FieldList, \
                     SubmitField, \
@@ -25,10 +27,10 @@ def showme(x,indent=''):
 class Risuto():
     def __init__(self):
         self._text = None
-        self._hashid = None
         self._name = None
         self._description = None
         self._separators = []
+        self._created = None
         self._risutoset = set()
     
     def _strvalidation(self,value,field,maxlen=None):
@@ -38,6 +40,8 @@ class Risuto():
             assert maxlen >= len(value), \
                    "The {} must be {} or fewer characters.".format(field,maxlen)
     
+    ############################################################################
+    # "Text", The original text of the list
     @property
     def text(self):
         return self._text
@@ -53,6 +57,8 @@ class Risuto():
         del self._text
         del self._risutoset
 
+    ############################################################################
+    # "Separators", what parts of the input text should be considered separators
     def addseparator(self,sep):
         self._strvalidation(sep,field='separator')
         self._separators.append(sep)
@@ -63,6 +69,8 @@ class Risuto():
         except:
             pass
         
+    ############################################################################
+    # "Risuto Set", the uinque elements of the input list
     @property
     def risutoset(self):
         return self._risutoset
@@ -93,6 +101,8 @@ class Risuto():
         del self._risutoset
         del self._text
     
+    ############################################################################
+    # "Name", A short name given to the list
     @property
     def name(self):
         return self._name
@@ -106,6 +116,8 @@ class Risuto():
     def name(self,value):
         del self._name
         
+    ############################################################################
+    # "Description", A longer description given to the list
     @property
     def description(self):
         return self._description
@@ -119,20 +131,40 @@ class Risuto():
     def description(self,value):
         del self._description
 
+    ############################################################################
+    # "Created", The date and time when the list was created
+    @property
+    def created(self):
+        return self._created
+    
+    @created.setter
+    def created(self,value):
+        assert isinstance(value, dt), "The created property must be a" +\
+                                      " datetime object"
+        self._created = value
+        
+    @created.deleter
+    def created(self,value):
+        del self._created
+
+    ############################################################################
+    # JSON compatibility for the session
     @classmethod
-    def fromdict(cls,d):
+    def fromjson(cls,d):
         instance = cls()
         instance.name = d['name']
         instance.description = d['description']
+        instance.created = parse(d['created'])
         instance._separators = d['separators']
         instance.text = d['text']
         return instance
 
-    def todict(self):
+    def tojson(self):
         d = {'text':self._text,
              'name':self._name,
              'description':self._description,
-             'separators':self._separators
+             'separators':self._separators,
+             'created':self._created.isoformat()
             }
         return d
 

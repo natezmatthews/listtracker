@@ -7,10 +7,10 @@
         {{ form.risuto1() }}
         {{ form.risuto2() }}
         <br>
-        {{ form.left() }}
-        {{ form.union() }}
-        {{ form.inters() }}
-        {{ form.right() }}
+        {{ form.left() }} {{ form.leftcnt }}
+        {{ form.union() }} {{ form.unioncnt }}
+        {{ form.inters() }} {{ form.interscnt }}
+        {{ form.right() }} {{ form.rightcnt }}
     </form>
     <body>
         {% if output %}
@@ -20,7 +20,9 @@
             {% for risuto in risutos %}
                 <div><h1>{{ risuto.name }} </h1>
                     {{ risuto.text }}<br>
-                    <i>Description:</i>{{ risuto.description }}<br>
+                    {{ risuto.risutoset }}<br>
+                    <i>Created: </i>{{ risuto.created.isoformat() }}<br>
+                    <i>Description: </i>{{ risuto.description }}<br>
                 </div>
             {% endfor %}
         {% endif %}
