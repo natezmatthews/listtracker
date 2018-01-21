@@ -34,25 +34,35 @@ def index():
         a = lookup[form.risuto1.data].risutoset
         b = lookup[form.risuto2.data].risutoset
         delimiter = bytes(form.delimiter.data, "utf-8").decode("unicode_escape")
-    
+
+    delimiterfunc = create_delimiterfunc(delimiter)
+
     for setop in ('left','union','inters','right'):
         # Get the results of the set operations
         res = setoperation(a,b,setop)
         # Create output to show
         if form.validate_on_submit() \
             and getattr(form,setop).data: # True if this button was just pressed
-            # The split here is a workaround since HTML doesn't understand \n
-            output = delimiter.join(res).split('\n')
+            output = delimiterfunc(res)
         # Assign result counts
         setattr(form,setop + 'cnt',len(res))
 
     if 'risutos' in locals():
         return render_template('index.html',risutos=risutos,
                                             output=output,
+                                            delimiterfunc=delimiterfunc,
                                             form=form)
     else:
         return render_template('index.html',output=output,
+                                            delimiterfunc=delimiterfunc,
                                             form=form)
+
+def create_delimiterfunc(delimiter):
+    def delimiterfunc(x):
+        # The split here is a workaround since HTML doesn't understand \n
+        # A JINJA loop adds the appropriate <br>s
+        return delimiter.join(x).split('\n')
+    return delimiterfunc
 
 def setoperation(a,b,setop):
     if setop == 'left':

@@ -1,3 +1,11 @@
+{% macro iterifpassed(iterable) -%}
+    {% if iterable %}
+        {% for i in iterable %}
+            {{ i }} <br>
+        {% endfor %}
+    {% endif %}
+{%- endmacro %}
+
 <html>
     <head>
         <title>Track changes to your lists</title>
@@ -17,16 +25,12 @@
         {{ form.delimiter() }}
     </form>
     <body>
-        {% if output %}
-            {% for line in output %}
-                {{ line }} <br>
-            {% endfor %}
-        {% endif %}
+        {{ iterifpassed(output) }}
         {% if risutos %}
             {% for risuto in risutos %}
                 <div><h1>{{ risuto.name }} </h1>
                     {{ risuto.text }}<br>
-                    {{ risuto.risutoset }}<br>
+                    {{ iterifpassed(delimiterfunc(risuto.risutoset)) }}
                     <i>Created: </i>{{ risuto.created.strftime('%b %d %Y at %I:%M:%S %p') }}<br>
                     <i>Description: </i>{{ risuto.description }}<br>
                 </div>
