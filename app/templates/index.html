@@ -27,7 +27,7 @@
                 <div><h1>{{ risuto.name }} </h1>
                     {{ risuto.text }}<br>
                     {{ risuto.risutoset }}<br>
-                    <i>Created: </i>{{ risuto.created.isoformat() }}<br>
+                    <i>Created: </i>{{ risuto.created.strftime('%b %d %Y at %I:%M:%S %p') }}<br>
                     <i>Description: </i>{{ risuto.description }}<br>
                 </div>
             {% endfor %}
