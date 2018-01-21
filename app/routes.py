@@ -25,14 +25,15 @@ def index():
     # Choices must be set after initiation of form
     form.risuto1.choices = choices
     form.risuto2.choices = choices[1:] + [choices[0]]
+    a = risutos[0].risutoset
+    b = risutos[1].risutoset
+    delimiter = ','
     output = None
     
     if form.validate_on_submit():
         a = lookup[form.risuto1.data].risutoset
         b = lookup[form.risuto2.data].risutoset
-    else:
-        a = risutos[0].risutoset
-        b = risutos[1].risutoset
+        delimiter = bytes(form.delimiter.data, "utf-8").decode("unicode_escape")
     
     for setop in ('left','union','inters','right'):
         # Get the results of the set operations
@@ -40,7 +41,8 @@ def index():
         # Create output to show
         if form.validate_on_submit() \
             and getattr(form,setop).data: # True if this button was just pressed
-            output = ','.join(res)
+            # The split here is a workaround since HTML doesn't understand \n
+            output = delimiter.join(res).split('\n')
         # Assign result counts
         setattr(form,setop + 'cnt',len(res))
 

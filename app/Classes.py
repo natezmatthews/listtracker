@@ -171,6 +171,7 @@ class Risuto():
 class ComparisonForm(FlaskForm):
     risuto1 = SelectField('Left List')
     risuto2 = SelectField('Right List')
+    
     left = SubmitField('Left')
     leftcnt = 0
     union = SubmitField('Union')
@@ -180,10 +181,12 @@ class ComparisonForm(FlaskForm):
     right = SubmitField('Right')
     rightcnt = 0
 
+    delimiter = StringField('Delimiter for output: ',default=',')
+
 class RisutoForm(FlaskForm):
     name = StringField('Name')
     text = TextAreaField('List')
     description = TextAreaField('Description')
-    comma = BooleanField('Comma')
+    comma = BooleanField('Comma',default='true')
     newline = BooleanField('New Line',default='true')
     submit = SubmitField('Submit')
