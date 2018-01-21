@@ -14,7 +14,6 @@ def clear():
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     form = ComparisonForm()
-    # Choices must be set after initiation of form
     if 'risutos' in session:
         risutos = [Risuto.fromjson(r) for r in session['risutos']]
         lookup = {r.name: r for r in risutos}
@@ -23,19 +22,23 @@ def index():
         form.risuto1.data = {}
         choices = [(None,'Nothing yet')]
 
+    # Choices must be set after initiation of form
     form.risuto1.choices = choices
     form.risuto2.choices = choices[1:] + [choices[0]]
     
-    if form.left.data or form.union.data or form.inters.data or form.right.data:
-        setop = setoperation(lookup[form.risuto1.data],
-                             lookup[form.risuto2.data],
-                             form.left.data,
-                             form.union.data,
-                             form.inters.data,
-                             form.right.data)
-        output = ','.join(list(setop))
-    else:
-        output = None
+    a = lookup[form.risuto1.data].risutoset
+    b = lookup[form.risuto2.data].risutoset
+    output = None
+    
+    for setop in ('left','union','inters','right'):
+        # Get the results of the set operations
+        res = setoperation(a,b,setop)
+        # Create output to show
+        if form.validate_on_submit() \
+            and getattr(form,setop).data: # True if this button was just pressed
+            output = ','.join(res)
+        # Assign result counts
+        setattr(form,setop + 'cnt',len(res))
 
     if 'risutos' in locals():
         return render_template('index.html',risutos=risutos,
@@ -45,17 +48,14 @@ def index():
         return render_template('index.html',output=output,
                                             form=form)
 
-
-def setoperation(risuto1,risuto2,left,union,inters,right):
-    a = risuto1.risutoset
-    b = risuto2.risutoset
-    if left:
+def setoperation(a,b,setop):
+    if setop == 'left':
         return a - b
-    elif union:
+    elif setop == 'union':
         return a | b
-    elif inters:
+    elif setop == 'inters':
         return a & b
-    elif right:
+    elif setop == 'right':
         return b - a
 
 @app.route('/create',methods=['GET','POST'])
