@@ -25,10 +25,14 @@ def index():
     # Choices must be set after initiation of form
     form.risuto1.choices = choices
     form.risuto2.choices = choices[1:] + [choices[0]]
-    
-    a = lookup[form.risuto1.data].risutoset
-    b = lookup[form.risuto2.data].risutoset
     output = None
+    
+    if form.validate_on_submit():
+        a = lookup[form.risuto1.data].risutoset
+        b = lookup[form.risuto2.data].risutoset
+    else:
+        a = risutos[0].risutoset
+        b = risutos[1].risutoset
     
     for setop in ('left','union','inters','right'):
         # Get the results of the set operations
