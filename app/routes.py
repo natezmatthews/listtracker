@@ -58,20 +58,11 @@ def index():
         delimiter = bytes(form.delimiter.data, "utf-8").decode("unicode_escape")
     else:
         delimiter = ','
-    
-    delimiterfunc = create_delimiterfunc(delimiter)
 
     return render_template('index.html',risutos=risutos,
                                         output=output,
-                                        delimiterfunc=delimiterfunc,
+                                        delimitfunc=lambda x: delimiter.join(x),
                                         form=form)
-
-def create_delimiterfunc(delimiter):
-    def delimiterfunc(x):
-        # The split here is a workaround since HTML doesn't understand \n
-        # A JINJA loop adds the appropriate <br>s
-        return delimiter.join(x).split('\n')
-    return delimiterfunc
 
 def setoperation(a,b,setop):
     if setop == 'left':

@@ -1,9 +1,7 @@
-{% macro iterifpassed(iterable) -%}
-    {% if iterable %}
-        {% for i in delimiterfunc(iterable) %}
-            {{ i }} <br>
-        {% endfor %}
-    {% endif %}
+{% macro newlinetobreak(iterable) -%}
+    {% for i in iterable.split('\n') %}
+        {{ i }} <br>
+    {% endfor %}
 {%- endmacro %}
 
 <html>
@@ -25,12 +23,14 @@
         {{ form.delimiter() }}
     </form>
     <body>
-        {{ iterifpassed(output) }}
+        {% if output %}
+            {{ newlinetobreak(delimitfunc(output)) }}
+        {% endif %}
         {% if risutos %}
             {% for risuto in risutos %}
                 <div><h1>{{ risuto.name }} </h1>
-                    {{ risuto.text }}<br>
-                    {{ iterifpassed(risuto.risutoset) }}
+                    {{ newlinetobreak(risuto.text) }}
+                    {{ newlinetobreak(delimitfunc(risuto.risutoset)) }}
                     <i>Created: </i>{{ risuto.created.strftime('%b %d %Y at %I:%M:%S %p') }}<br>
                     <i>Description: </i>{{ risuto.description }}<br>
                 </div>
