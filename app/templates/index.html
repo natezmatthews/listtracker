@@ -1,6 +1,6 @@
 {% macro iterifpassed(iterable) -%}
     {% if iterable %}
-        {% for i in iterable %}
+        {% for i in delimiterfunc(iterable) %}
             {{ i }} <br>
         {% endfor %}
     {% endif %}
@@ -30,7 +30,7 @@
             {% for risuto in risutos %}
                 <div><h1>{{ risuto.name }} </h1>
                     {{ risuto.text }}<br>
-                    {{ iterifpassed(delimiterfunc(risuto.risutoset)) }}
+                    {{ iterifpassed(risuto.risutoset) }}
                     <i>Created: </i>{{ risuto.created.strftime('%b %d %Y at %I:%M:%S %p') }}<br>
                     <i>Description: </i>{{ risuto.description }}<br>
                 </div>

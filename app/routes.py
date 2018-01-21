@@ -13,49 +13,58 @@ def clear():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    form = ComparisonForm()
     if 'risutos' in session:
         risutos = [Risuto.fromjson(r) for r in session['risutos']]
         lookup = {r.name: r for r in risutos}
-        choices = [(r.name,r.name) for r in risutos]
     else:
-        form.risuto1.data = {}
-        choices = [(None,'Nothing yet')]
-
-    # Choices must be set after initiation of form
-    form.risuto1.choices = choices
-    form.risuto2.choices = choices[1:] + [choices[0]]
-    a = risutos[0].risutoset
-    b = risutos[1].risutoset
-    delimiter = ','
-    output = None
+        risutos = []
     
-    if form.validate_on_submit():
-        a = lookup[form.risuto1.data].risutoset
-        b = lookup[form.risuto2.data].risutoset
-        delimiter = bytes(form.delimiter.data, "utf-8").decode("unicode_escape")
+    output = None
+    form = ComparisonForm()
 
+    if len(risutos) > 0:
+        # Choices must be set after initiation of form
+        choices = [(r.name,r.name) for r in risutos]
+        form.risuto1.choices = choices
+        form.risuto2.choices = choices[1:] + [choices[0]]
+
+        if form.validate_on_submit():
+            a = lookup[form.risuto1.data].risutoset
+            b = lookup[form.risuto2.data].risutoset
+        elif len(risutos) == 1:
+            a = risutos[0].risutoset
+            b = risutos[0].risutoset
+        elif len(risutos) > 1:
+            a = risutos[0].risutoset
+            b = risutos[1].risutoset
+
+        for setop in ('left','union','inters','right'):
+            # Get the results of the set operations
+            res = setoperation(a,b,setop)
+            # Assign result counts
+            setattr(form,setop + 'cnt',len(res))
+            # Checks if button corresponding to this setop was pressed:
+            if form.validate_on_submit() and getattr(form,setop).data:
+                output = res
+    else:
+        choices = [(None,'Nothing yet')]
+        form.risuto1.choices = choices
+        form.risuto2.choices = choices
+        if form.validate_on_submit():
+            output = 'Enter a list for comparison'
+
+    # The specified delimiter will be used for the display of the output.
+    if form.validate_on_submit():
+        delimiter = bytes(form.delimiter.data, "utf-8").decode("unicode_escape")
+    else:
+        delimiter = ','
+    
     delimiterfunc = create_delimiterfunc(delimiter)
 
-    for setop in ('left','union','inters','right'):
-        # Get the results of the set operations
-        res = setoperation(a,b,setop)
-        # Create output to show
-        if form.validate_on_submit() \
-            and getattr(form,setop).data: # True if this button was just pressed
-            output = delimiterfunc(res)
-        # Assign result counts
-        setattr(form,setop + 'cnt',len(res))
-
-    if 'risutos' in locals():
-        return render_template('index.html',risutos=risutos,
-                                            output=output,
-                                            delimiterfunc=delimiterfunc,
-                                            form=form)
-    else:
-        return render_template('index.html',output=output,
-                                            delimiterfunc=delimiterfunc,
-                                            form=form)
+    return render_template('index.html',risutos=risutos,
+                                        output=output,
+                                        delimiterfunc=delimiterfunc,
+                                        form=form)
 
 def create_delimiterfunc(delimiter):
     def delimiterfunc(x):
