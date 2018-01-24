@@ -16,7 +16,7 @@
 
       /* Copy the text inside the text field */
       document.execCommand("Copy");
-    }
+    };
 </script>
 
 {% macro newlinetobreak(iterable) -%}
@@ -47,9 +47,9 @@
     <body>
         {% if output %}
             <h3>Output</h3>
-            <input type="text" value="{{ delimitfunc(output) }}" id="output">
+            <textarea rows="4" cols="50" id="output">{{ delimitfunc(output) }}</textarea>
             <button onclick="outputToClipBoard()">Copy text</button>
-            <br>
+            <br><br>
         {% endif %}
 
         <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
