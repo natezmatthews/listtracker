@@ -3,6 +3,22 @@ from app import app
 from app.Classes import ComparisonForm, RisutoForm, Risuto
 from datetime import datetime as dt
 
+def loadrisutos():
+    if 'risutos' in session:
+        return [Risuto.fromjson(r) for r in session['risutos']]
+    else:
+        return []
+
+def setoperation(a,b,setop):
+    if setop == 'left':
+        return a - b
+    elif setop == 'union':
+        return a | b
+    elif setop == 'inters':
+        return a & b
+    elif setop == 'right':
+        return b - a
+
 @app.route('/clear')
 def clear():
     print(session)
@@ -13,12 +29,8 @@ def clear():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    if 'risutos' in session:
-        risutos = [Risuto.fromjson(r) for r in session['risutos']]
-        lookup = {r.name: r for r in risutos}
-    else:
-        risutos = []
-    
+    risutos = loadrisutos()
+    lookup = {r.name: r for r in risutos}
     output = None
     form = ComparisonForm()
 
@@ -63,16 +75,6 @@ def index():
                                         output=output,
                                         delimitfunc=lambda x: delimiter.join(x),
                                         form=form)
-
-def setoperation(a,b,setop):
-    if setop == 'left':
-        return a - b
-    elif setop == 'union':
-        return a | b
-    elif setop == 'inters':
-        return a & b
-    elif setop == 'right':
-        return b - a
 
 @app.route('/create',methods=['GET','POST'])
 def create():

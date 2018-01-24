@@ -9,6 +9,14 @@
     $(document).ready(function() {
         $('#table').DataTable();
     } );
+
+    function outputToClipBoard() {
+      /* Select the text field */
+      $('#output').select();
+
+      /* Copy the text inside the text field */
+      document.execCommand("Copy");
+    }
 </script>
 
 {% macro newlinetobreak(iterable) -%}
@@ -35,19 +43,23 @@
         <br> 
         {{ form.delimiter() }}
     </form>
+    <br<
     <body>
         {% if output %}
-            {{ newlinetobreak(delimitfunc(output)) }}
+            <h3>Output</h3>
+            <input type="text" value="{{ delimitfunc(output) }}" id="output">
+            <button onclick="outputToClipBoard()">Copy text</button>
+            <br>
         {% endif %}
 
         <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>"Name" ::after</th>
-                    <th>"Created" ::after</th>
-                    <th>"Description" ::after</th>
-                    <th>"Input" ::after</th>
-                    <th>"Formatted Unique Items" ::after</th>
+                    <th>Name</th>
+                    <th>Created</th>
+                    <th>Description</th>
+                    <th>Input</th>
+                    <th>Formatted Unique Items</th>
                 </tr>
             </thead>
             <tbody>
