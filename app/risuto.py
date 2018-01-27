@@ -18,13 +18,20 @@ def showme(x,indent=''):
             print('{}Thing unknown'.format(indent))
 
 class Risuto():
-    def __init__(self):
-        self._text = None
-        self._name = None
-        self._description = None
-        self._separators = []
-        self._created = None
-        self._risutoset = set()
+    def __init__(self,d=None):
+        if d:
+            self.name = d['name']
+            self.description = d['description']
+            self._separators = d['separators']
+            self.created = parse(d['created'])
+            self.text = d['text']
+        else:
+            self._name = None
+            self._description = None
+            self._separators = []
+            self._created = None
+            self._text = None
+            self._risutoset = set()
     
     def _strvalidation(self,value,field,maxlen=None):
         assert isinstance(value, str), "The {} must be a string.".format(field)
@@ -82,7 +89,7 @@ class Risuto():
     
     @risutoset.setter
     def risutoset(self,value):
-        raise AttributeError('The item set must' +\
+        raise AttributeError('The item set must ' +\
                                 'be initiated by creating an item list.')
     
     @risutoset.deleter
@@ -138,21 +145,10 @@ class Risuto():
 
     ############################################################################
     # JSON compatibility for the session
-    @classmethod
-    def fromjson(cls,d):
-        instance = cls()
-        instance.name = d['name']
-        instance.description = d['description']
-        instance.created = parse(d['created'])
-        instance._separators = d['separators']
-        instance.text = d['text']
-        return instance
-
-    def tojson(self):
-        d = {'text':self._text,
-             'name':self._name,
-             'description':self._description,
-             'separators':self._separators,
-             'created':self._created.isoformat()
-            }
-        return d
+    def to_json(self):
+        return {'text':self._text,
+                 'name':self._name,
+                 'description':self._description,
+                 'separators':self._separators,
+                 'created':self._created.isoformat()
+                }

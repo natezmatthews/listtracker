@@ -6,7 +6,7 @@ from datetime import datetime as dt
 
 def loadrisutos():
     if 'risutos' in session:
-        return [Risuto.fromjson(r) for r in session['risutos']]
+        return [Risuto(r) for r in session['risutos']]
     else:
         return []
 
@@ -104,7 +104,7 @@ def create():
         risuto.created = dt.now()
 
         # Store it in session
-        risutojson = risuto.tojson()
+        risutojson = risuto.to_json()
         if 'risutos' in session:
             # Appending directly didn't work; something about session?
             risutos = session['risutos']
