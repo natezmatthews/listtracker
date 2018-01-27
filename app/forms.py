@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, \
-                    FieldList, \
-                    SubmitField, \
+from wtforms import SelectField,  \
+                    FieldList,  \
+                    SubmitField,  \
                     TextAreaField, \
                     StringField, \
                     BooleanField
@@ -25,6 +25,6 @@ class RisutoForm(FlaskForm):
     name = StringField('Name')
     text = TextAreaField('List')
     description = TextAreaField('Description')
-    comma = BooleanField('Comma',default='true')
-    newline = BooleanField('New Line',default='true')
+    comma = BooleanField('Comma', default='true')
+    newline = BooleanField('New Line', default='true')
     submit = SubmitField('Submit')

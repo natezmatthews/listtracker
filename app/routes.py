@@ -10,7 +10,7 @@ def loadrisutos():
     else:
         return []
 
-def setoperation(a,b,setop):
+def setoperation(a, b, setop):
     if setop == 'left':
         return a - b
     elif setop == 'union':
@@ -37,7 +37,7 @@ def index():
 
     if len(risutos) > 0:
         # Choices must be set after initiation of form
-        choices = [(r.name,r.name) for r in risutos]
+        choices = [(r.name, r.name) for r in risutos]
         form.risuto1.choices = choices
         form.risuto2.choices = choices[1:] + [choices[0]]
 
@@ -51,16 +51,16 @@ def index():
             a = risutos[0].risutoset
             b = risutos[1].risutoset
 
-        for setop in ('left','union','inters','right'):
+        for setop in ('left', 'union', 'inters', 'right'):
             # Get the results of the set operations
-            res = setoperation(a,b,setop)
+            res = setoperation(a, b, setop)
             # Assign result counts
-            setattr(form,setop + 'cnt',len(res))
+            setattr(form, setop + 'cnt', len(res))
             # Checks if button corresponding to this setop was pressed:
-            if form.validate_on_submit() and getattr(form,setop).data:
+            if form.validate_on_submit() and getattr(form, setop).data:
                 output = res
     else:
-        choices = [(None,'Nothing yet')]
+        choices = [(None, 'Nothing yet')]
         form.risuto1.choices = choices
         form.risuto2.choices = choices
         if form.validate_on_submit():
@@ -72,12 +72,13 @@ def index():
     else:
         delimiter = ','
 
-    return render_template('index.html',risutos=risutos,
-                                        output=output,
-                                        delimitfunc=lambda x: delimiter.join(x),
-                                        form=form)
+    return render_template('index.html',
+                            risutos=risutos,
+                            output=output,
+                            delimitfunc=lambda x: delimiter.join(x),
+                            form=form)
 
-@app.route('/create',methods=['GET','POST'])
+@app.route('/create',methods=['GET', 'POST'])
 def create():
     form = RisutoForm()
     if form.validate_on_submit():
@@ -115,4 +116,4 @@ def create():
         
         return redirect(url_for('index'))
     
-    return render_template('create.html',form=form)
+    return render_template('create.html', form=form)

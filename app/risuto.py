@@ -1,24 +1,24 @@
 from datetime import datetime as dt
 from dateutil.parser import parse
 
-def showme(x,indent=''):
+def showme(x, indent=''):
     try:
-        print('{}Type: {}'.format(indent,str(type(x))))
+        print('{}Type: {}'.format(indent, str(type(x))))
     except:
         print('{}Type unknown'.format(indent))
     try:
-        if isinstance(x,str):
+        if isinstance(x, str):
             raise TypeError # Skip to the except
         for y in x:
-            showme(y,indent + ' ')
+            showme(y, indent + ' ')
     except: # Not iterable
         try:
-            print('{}Thing: {}'.format(indent,str(x)))
+            print('{}Thing: {}'.format(indent, str(x)))
         except:
             print('{}Thing unknown'.format(indent))
 
 class Risuto():
-    def __init__(self,d=None):
+    def __init__(self, d=None):
         if d:
             self.name = d['name']
             self.description = d['description']
@@ -33,7 +33,7 @@ class Risuto():
             self._text = None
             self._risutoset = set()
     
-    def _strvalidation(self,value,field,maxlen=None):
+    def _strvalidation(self, value, field, maxlen=None):
         assert isinstance(value, str), "The {} must be a string.".format(field)
         assert value, "The {} may not be an empty string.".format(field)
         if maxlen:
@@ -47,23 +47,23 @@ class Risuto():
         return self._text
     
     @text.setter
-    def text(self,value):
-        self._strvalidation(value,field='text')
+    def text(self, value):
+        self._strvalidation(value, field='text')
         self._text = value
         self._risutoset_setter(value)
         
     @text.deleter
-    def text(self,value):
+    def text(self, value):
         del self._text
         del self._risutoset
 
     ############################################################################
     # "Separators", what parts of the input text should be considered separators
-    def add_separator(self,sep):
-        self._strvalidation(sep,field='separator')
+    def add_separator(self, sep):
+        self._strvalidation(sep, field='separator')
         self._separators.append(sep)
 
-    def remove_separator(self,sep):
+    def remove_separator(self, sep):
         try:
             self._separators.remove(sep)
         except:
@@ -75,7 +75,7 @@ class Risuto():
     def risutoset(self):
         return self._risutoset
     
-    def _risutoset_setter(self,value):
+    def _risutoset_setter(self, value):
         newrisuto = [value]
         for sep in self._separators:
             oldrisuto = newrisuto
@@ -85,10 +85,10 @@ class Risuto():
         
         # The filter gets rid of the empty strings split creates 
         # when there are two or more delimiters in a row
-        self._risutoset = set(filter(None,newrisuto))
+        self._risutoset = set(filter(None, newrisuto))
     
     @risutoset.setter
-    def risutoset(self,value):
+    def risutoset(self, value):
         raise AttributeError('The item set must ' +\
                                 'be initiated by creating an item list.')
     
@@ -104,12 +104,12 @@ class Risuto():
         return self._name
     
     @name.setter
-    def name(self,value):
-        self._strvalidation(value,field='name',maxlen=80) # TODO: MAXLEN
+    def name(self, value):
+        self._strvalidation(value, field='name', maxlen=80) # TODO: MAXLEN
         self._name = value
         
     @name.deleter
-    def name(self,value):
+    def name(self, value):
         del self._name
         
     ############################################################################
@@ -119,12 +119,12 @@ class Risuto():
         return self._description
     
     @description.setter
-    def description(self,value):
-        self._strvalidation(value,field='description',maxlen=280) # TODO: MAXLEN
+    def description(self, value):
+        self._strvalidation(value, field='description', maxlen=280) # TODO: MAXLEN
         self._description = value
         
     @description.deleter
-    def description(self,value):
+    def description(self, value):
         del self._description
 
     ############################################################################
@@ -134,13 +134,13 @@ class Risuto():
         return self._created
     
     @created.setter
-    def created(self,value):
+    def created(self, value):
         assert isinstance(value, dt), "The created property must be a" +\
                                       " datetime object"
         self._created = value
         
     @created.deleter
-    def created(self,value):
+    def created(self, value):
         del self._created
 
     ############################################################################
