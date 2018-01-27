@@ -1,12 +1,5 @@
-from flask_wtf import FlaskForm
 from datetime import datetime as dt
 from dateutil.parser import parse
-from wtforms import SelectField, \
-                    FieldList, \
-                    SubmitField, \
-                    TextAreaField, \
-                    StringField, \
-                    BooleanField
 
 def showme(x,indent=''):
     try:
@@ -59,11 +52,11 @@ class Risuto():
 
     ############################################################################
     # "Separators", what parts of the input text should be considered separators
-    def addseparator(self,sep):
+    def add_separator(self,sep):
         self._strvalidation(sep,field='separator')
         self._separators.append(sep)
 
-    def removeseparator(self,sep):
+    def remove_separator(self,sep):
         try:
             self._separators.remove(sep)
         except:
@@ -76,16 +69,12 @@ class Risuto():
         return self._risutoset
     
     def _risutoset_setter(self,value):
-        # showme(value)
         newrisuto = [value]
-        # showme(newrisuto)
         for sep in self._separators:
-            # showme(sep)
             oldrisuto = newrisuto
             newrisuto = []
             for elem in oldrisuto:
                 newrisuto.extend(elem.split(sep))
-            # showme(newrisuto)
         
         # The filter gets rid of the empty strings split creates 
         # when there are two or more delimiters in a row
@@ -167,26 +156,3 @@ class Risuto():
              'created':self._created.isoformat()
             }
         return d
-
-class ComparisonForm(FlaskForm):
-    risuto1 = SelectField('Left List')
-    risuto2 = SelectField('Right List')
-    
-    left = SubmitField('Left')
-    leftcnt = 0
-    union = SubmitField('Union')
-    unioncnt = 0
-    inters = SubmitField('Intersection')
-    interscnt = 0
-    right = SubmitField('Right')
-    rightcnt = 0
-
-    delimiter = StringField('Delimiter for output: ',default=',')
-
-class RisutoForm(FlaskForm):
-    name = StringField('Name')
-    text = TextAreaField('List')
-    description = TextAreaField('Description')
-    comma = BooleanField('Comma',default='true')
-    newline = BooleanField('New Line',default='true')
-    submit = SubmitField('Submit')

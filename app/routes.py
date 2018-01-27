@@ -1,6 +1,7 @@
 from flask import render_template, session, redirect, url_for
 from app import app
-from app.Classes import ComparisonForm, RisutoForm, Risuto
+from app.risuto import Risuto
+from app.forms import ComparisonForm, RisutoForm
 from datetime import datetime as dt
 
 def loadrisutos():
@@ -89,15 +90,15 @@ def create():
         
         # Separators
         if form.comma.data:
-            risuto.addseparator(',')
+            risuto.add_separator(',')
         else:
-            risuto.removeseparator(',')
+            risuto.remove_separator(',')
         if form.newline.data:
-            risuto.addseparator('\n')
-            risuto.addseparator('\r')
+            risuto.add_separator('\n')
+            risuto.add_separator('\r')
         else:
-            risuto.removeseparator('\n')
-            risuto.removeseparator('\r')
+            risuto.remove_separator('\n')
+            risuto.remove_separator('\r')
 
         # Datetime
         risuto.created = dt.now()
