@@ -1,22 +1,6 @@
 from datetime import datetime as dt
 from dateutil.parser import parse
 
-def showme(x, indent=''):
-    try:
-        print('{}Type: {}'.format(indent, str(type(x))))
-    except:
-        print('{}Type unknown'.format(indent))
-    try:
-        if isinstance(x, str):
-            raise TypeError # Skip to the except
-        for y in x:
-            showme(y, indent + ' ')
-    except: # Not iterable
-        try:
-            print('{}Thing: {}'.format(indent, str(x)))
-        except:
-            print('{}Thing unknown'.format(indent))
-
 class Risuto():
     def __init__(self, d=None):
         if d:
@@ -33,12 +17,12 @@ class Risuto():
             self._text = None
             self._risutoset = set()
     
-    def _strvalidation(self, value, field, maxlen=None):
-        assert isinstance(value, str), "The {} must be a string.".format(field)
-        assert value, "The {} may not be an empty string.".format(field)
-        if maxlen:
-            assert maxlen >= len(value), \
-                   "The {} must be {} or fewer characters.".format(field,maxlen)
+    def _strvalidation(self, value, fieldname, maxlen=None):
+        if not isinstance(value, str):
+            raise TypeError("The {} must be a string.".format(fieldname))
+        if maxlen and maxlen < len(value):
+            raise ValueError("The {} must be ".format(fieldname) + \
+                             "{} or fewer characters.".format(maxlen))
     
     ############################################################################
     # "Text", The original text of the list
@@ -48,7 +32,7 @@ class Risuto():
     
     @text.setter
     def text(self, value):
-        self._strvalidation(value, field='text')
+        self._strvalidation(value, fieldname='text')
         self._text = value
         self._risutoset_setter(value)
         
@@ -60,7 +44,7 @@ class Risuto():
     ############################################################################
     # "Separators", what parts of the input text should be considered separators
     def add_separator(self, sep):
-        self._strvalidation(sep, field='separator')
+        self._strvalidation(sep, fieldname='separator')
         self._separators.append(sep)
 
     def remove_separator(self, sep):
@@ -105,7 +89,7 @@ class Risuto():
     
     @name.setter
     def name(self, value):
-        self._strvalidation(value, field='name', maxlen=80) # TODO: MAXLEN
+        self._strvalidation(value, fieldname='name', maxlen=80)
         self._name = value
         
     @name.deleter
@@ -120,7 +104,7 @@ class Risuto():
     
     @description.setter
     def description(self, value):
-        self._strvalidation(value, field='description', maxlen=280) # TODO: MAXLEN
+        self._strvalidation(value, fieldname='description', maxlen=280)
         self._description = value
         
     @description.deleter
@@ -135,9 +119,10 @@ class Risuto():
     
     @created.setter
     def created(self, value):
-        assert isinstance(value, dt), "The created property must be a" +\
-                                      " datetime object"
-        self._created = value
+        if isinstance(value, dt):
+            self._created = value
+        else:
+            raise TypeError("The 'created' property must be a datetime object")
         
     @created.deleter
     def created(self, value):
