@@ -33,6 +33,13 @@ def get_choices(risutos):
     else:
         return [(None, 'Nothing yet')]
 
+def get_delimiter(submitted_yn,submission):
+    # The specified delimiter will be used for the display of the output.
+    if submitted_yn:
+        return bytes(submission, "utf-8").decode("unicode_escape")
+    else:
+        return ','
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -42,6 +49,8 @@ def index():
     choices = get_choices(risutos)
     form.risuto1.choices = choices
     form.risuto2.choices = choices[1:] + [choices[0]]
+
+    delimiter = get_delimiter(form.validate_on_submit(),form.delimiter.data)
 
     lookup = {r.name: r for r in risutos}
     output = None
@@ -68,12 +77,6 @@ def index():
     else:
         if form.validate_on_submit():
             output = 'Enter a list for comparison'
-
-    # The specified delimiter will be used for the display of the output.
-    if form.validate_on_submit():
-        delimiter = bytes(form.delimiter.data, "utf-8").decode("unicode_escape")
-    else:
-        delimiter = ','
 
     return render_template('index.html',
                             risutos=risutos,
