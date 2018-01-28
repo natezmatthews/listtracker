@@ -7,8 +7,8 @@ from wtforms import SelectField,  \
                     BooleanField
 
 class ComparisonForm(FlaskForm):
-    risuto1 = SelectField('Left List')
-    risuto2 = SelectField('Right List')
+    dropdown1 = SelectField('Left List')
+    dropdown2 = SelectField('Right List')
     
     left = SubmitField('Left')
     leftcnt = 0

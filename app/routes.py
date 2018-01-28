@@ -40,32 +40,39 @@ def get_delimiter(submitted_yn,submission):
     else:
         return ','
 
+def get_sets_for_operation(submitted_yn, risutos,
+                           submitted_name1, submitted_name2):
+    lookup = {r.name: r for r in risutos}
+    if submitted_yn:
+        a = lookup[submitted_name1].risutoset
+        b = lookup[submitted_name2].risutoset
+    elif len(risutos) == 1:
+        a = risutos[0].risutoset
+        b = risutos[0].risutoset
+    elif len(risutos) > 1:
+        a = risutos[0].risutoset
+        b = risutos[1].risutoset
+    
+    return (a, b)
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     risutos = load_risutos()
     form = ComparisonForm()
-    
+    output = None
+
     choices = get_choices(risutos)
-    form.risuto1.choices = choices
-    form.risuto2.choices = choices[1:] + [choices[0]]
+    form.dropdown1.choices = choices
+    form.dropdown2.choices = choices[1:] + [choices[0]]
 
     delimiter = get_delimiter(form.validate_on_submit(),form.delimiter.data)
 
-    lookup = {r.name: r for r in risutos}
-    output = None
-
     if len(risutos) > 0:
-        if form.validate_on_submit():
-            a = lookup[form.risuto1.data].risutoset
-            b = lookup[form.risuto2.data].risutoset
-        elif len(risutos) == 1:
-            a = risutos[0].risutoset
-            b = risutos[0].risutoset
-        elif len(risutos) > 1:
-            a = risutos[0].risutoset
-            b = risutos[1].risutoset
-
+        
+        a, b = get_sets_for_operation(form.validate_on_submit(), risutos,
+                                      form.dropdown1.data, form.dropdown2.data)
+        
         for setop in ('left', 'union', 'inters', 'right'):
             # Get the results of the set operations
             res = setoperation(a, b, setop)
