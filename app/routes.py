@@ -27,20 +27,26 @@ def clear():
     print(session)      
     return 'Done'
 
+def get_choices(risutos):
+    if len(risutos) > 1:
+        return [(r.name, r.name) for r in risutos]
+    else:
+        return [(None, 'Nothing yet')]
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     risutos = load_risutos()
+    form = ComparisonForm()
+    
+    choices = get_choices(risutos)
+    form.risuto1.choices = choices
+    form.risuto2.choices = choices[1:] + [choices[0]]
+
     lookup = {r.name: r for r in risutos}
     output = None
-    form = ComparisonForm()
 
     if len(risutos) > 0:
-        # Choices must be set after initiation of form
-        choices = [(r.name, r.name) for r in risutos]
-        form.risuto1.choices = choices
-        form.risuto2.choices = choices[1:] + [choices[0]]
-
         if form.validate_on_submit():
             a = lookup[form.risuto1.data].risutoset
             b = lookup[form.risuto2.data].risutoset
@@ -60,9 +66,6 @@ def index():
             if form.validate_on_submit() and getattr(form, setop).data:
                 output = res
     else:
-        choices = [(None, 'Nothing yet')]
-        form.risuto1.choices = choices
-        form.risuto2.choices = choices
         if form.validate_on_submit():
             output = 'Enter a list for comparison'
 
