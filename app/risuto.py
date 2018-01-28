@@ -17,7 +17,7 @@ class Risuto():
             self._text = None
             self._risutoset = set()
     
-    def _strvalidation(self, value, fieldname, maxlen=None):
+    def _str_validation(self, value, fieldname, maxlen=None):
         if not isinstance(value, str):
             raise TypeError("The {} must be a string.".format(fieldname))
         if maxlen and maxlen < len(value):
@@ -32,7 +32,7 @@ class Risuto():
     
     @text.setter
     def text(self, value):
-        self._strvalidation(value, fieldname='text')
+        self._str_validation(value, fieldname='text')
         self._text = value
         self._risutoset_setter(value)
         
@@ -44,7 +44,7 @@ class Risuto():
     ############################################################################
     # "Separators", what parts of the input text should be considered separators
     def add_separator(self, sep):
-        self._strvalidation(sep, fieldname='separator')
+        self._str_validation(sep, fieldname='separator')
         self._separators.append(sep)
 
     def remove_separator(self, sep):
@@ -89,7 +89,7 @@ class Risuto():
     
     @name.setter
     def name(self, value):
-        self._strvalidation(value, fieldname='name', maxlen=80)
+        self._str_validation(value, fieldname='name', maxlen=80)
         self._name = value
         
     @name.deleter
@@ -104,7 +104,7 @@ class Risuto():
     
     @description.setter
     def description(self, value):
-        self._strvalidation(value, fieldname='description', maxlen=280)
+        self._str_validation(value, fieldname='description', maxlen=280)
         self._description = value
         
     @description.deleter

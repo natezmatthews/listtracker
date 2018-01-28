@@ -4,7 +4,7 @@ from app.risuto import Risuto
 from app.forms import ComparisonForm, RisutoForm
 from datetime import datetime as dt
 
-def loadrisutos():
+def load_risutos():
     if 'risutos' in session:
         return [Risuto(r) for r in session['risutos']]
     else:
@@ -30,7 +30,7 @@ def clear():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    risutos = loadrisutos()
+    risutos = load_risutos()
     lookup = {r.name: r for r in risutos}
     output = None
     form = ComparisonForm()
