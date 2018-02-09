@@ -4,6 +4,13 @@ from app.risuto import Risuto
 from app.forms import ComparisonForm, RisutoForm
 from datetime import datetime as dt
 
+@app.route('/clear')
+def clear():
+    print(session)
+    session.clear()
+    print(session)      
+    return 'Done'
+
 def load_risutos():
     if 'risutos' in session:
         return [Risuto(r) for r in session['risutos']]
@@ -19,13 +26,6 @@ def setoperation(a, b, setop):
         return a & b
     elif setop == 'right':
         return b - a
-
-@app.route('/clear')
-def clear():
-    print(session)
-    session.clear()
-    print(session)      
-    return 'Done'
 
 def get_choices(risutos):
     if len(risutos) > 1:
