@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import db
 
 class Risuto(db.Model):
@@ -13,7 +14,6 @@ class Risuto(db.Model):
 
 class Separator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    risutoid = ???
     separator = db.Column(db.String(5), unique=True)
     risuto_id = db.Column(db.Integer, db.ForeignKey('risuto.id'))
 
@@ -22,7 +22,6 @@ class Separator(db.Model):
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    risutoid = ???
     item = db.Column(db.String(80))
     risuto_id = db.Column(db.Integer, db.ForeignKey('risuto.id'))
 

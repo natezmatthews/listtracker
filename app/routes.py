@@ -1,5 +1,5 @@
 from flask import render_template, session, redirect, url_for
-from app import app
+from app import app, db
 from app.risuto import Risuto
 from app.forms import ComparisonForm, RisutoForm
 from datetime import datetime as dt
