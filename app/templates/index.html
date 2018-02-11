@@ -58,7 +58,6 @@
                     <th>Name</th>
                     <th>Created</th>
                     <th>Description</th>
-                    <th>Input</th>
                     <th>Formatted Unique Items</th>
                 </tr>
             </thead>
@@ -68,8 +67,7 @@
                     <td>{{ risuto.name }}</td>
                     <td>{{ risuto.created.strftime('%b %d %Y at %I:%M:%S %p') }} </td>
                     <td>{{ risuto.description }}</td>
-                    <td>{{ newlinetobreak(risuto.text) }}</td>
-                    <td>{{ newlinetobreak(delimitfunc(risuto.risutoset)) }}</td>
+                    <!-- <td>{{ newlinetobreak(delimitfunc(risuto.risutoset)) }}</td> -->
                 </tr>
                 {% endfor %}
             </tbody>

@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 from dateutil.parser import parse
 
-class Risuto():
+class Lista():
     def __init__(self, d=None):
         if d:
             self.name = d['name']
@@ -15,7 +15,7 @@ class Risuto():
             self._separators = []
             self._created = None
             self._text = None
-            self._risutoset = set()
+            self._listaset = set()
     
     def _str_validation(self, value, fieldname, maxlen=None):
         if not isinstance(value, str):
@@ -34,12 +34,12 @@ class Risuto():
     def text(self, value):
         self._str_validation(value, fieldname='text')
         self._text = value
-        self._risutoset_setter(value)
+        self._listaset_setter(value)
         
     @text.deleter
     def text(self, value):
         del self._text
-        del self._risutoset
+        del self._listaset
 
     ############################################################################
     # "Separators", what parts of the input text should be considered separators
@@ -54,31 +54,31 @@ class Risuto():
             pass
         
     ############################################################################
-    # "Risuto Set", the uinque elements of the input list
+    # "Lista Set", the unique elements of the input list
     @property
-    def risutoset(self):
-        return self._risutoset
+    def listaset(self):
+        return self._listaset
     
-    def _risutoset_setter(self, value):
-        newrisuto = [value]
+    def _listaset_setter(self, value):
+        newlista = [value]
         for sep in self._separators:
-            oldrisuto = newrisuto
-            newrisuto = []
-            for elem in oldrisuto:
-                newrisuto.extend(elem.split(sep))
+            oldlista = newlista
+            newlista = []
+            for elem in oldlista:
+                newlista.extend(elem.split(sep))
         
         # The filter gets rid of the empty strings split creates 
         # when there are two or more delimiters in a row
-        self._risutoset = set(filter(None, newrisuto))
+        self._listaset = set(filter(None, newlista))
     
-    @risutoset.setter
-    def risutoset(self, value):
+    @listaset.setter
+    def listaset(self, value):
         raise AttributeError('The item set must ' +\
                                 'be initiated by creating an item list.')
     
-    @risutoset.deleter
-    def risutoset(self):
-        del self._risutoset
+    @listaset.deleter
+    def listaset(self):
+        del self._listaset
         del self._text
     
     ############################################################################
