@@ -78,9 +78,8 @@ def index():
             # Assign result counts
             setattr(form, setop + 'cnt', len(res))
             # Checks if button corresponding to this setop was pressed:
-            if not form.validate_on_submit() and getattr(form, setop).data:
+            if form.validate_on_submit() and getattr(form, setop).data:
                 output = res
-            else:
     else:
         if form.validate_on_submit():
             output = 'Enter a list for comparison'

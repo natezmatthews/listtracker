@@ -14,7 +14,7 @@ class Risuto(db.Model):
 
 class Separator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    separator = db.Column(db.String(5), unique=True)
+    separator = db.Column(db.String(5))
     risuto_id = db.Column(db.Integer, db.ForeignKey('risuto.id'))
 
     def __repr__(self):
